@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="/VirtMonitors">/home/alexander/projects/VirtMonitors/build/src/VirtMonitors</file>
+
+  </qresource>
+</RCC>

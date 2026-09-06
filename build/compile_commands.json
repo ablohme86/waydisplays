@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/home/alexander/projects/VirtMonitors/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_OPENGL_LIB -DQT_QMLINTEGRATION_LIB -DQT_QML_LIB -DQT_QUICK_LIB -I/home/alexander/projects/VirtMonitors/build/src/virtmonitors_autogen/include -I/home/alexander/projects/VirtMonitors/src -isystem /usr/include/qt6/QtQml -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtQmlIntegration -isystem /usr/include/qt6/QtNetwork -isystem /usr/include/qt6/QtQuick -isystem /usr/include/qt6/QtGui -isystem /usr/include/qt6/QtOpenGL -g -std=gnu++17 -o src/CMakeFiles/virtmonitors.dir/virtmonitors_autogen/mocs_compilation.cpp.o -c /home/alexander/projects/VirtMonitors/build/src/virtmonitors_autogen/mocs_compilation.cpp",
+  "file": "/home/alexander/projects/VirtMonitors/build/src/virtmonitors_autogen/mocs_compilation.cpp",
+  "output": "/home/alexander/projects/VirtMonitors/build/src/CMakeFiles/virtmonitors.dir/virtmonitors_autogen/mocs_compilation.cpp.o"
+},
+{
+  "directory": "/home/alexander/projects/VirtMonitors/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_OPENGL_LIB -DQT_QMLINTEGRATION_LIB -DQT_QML_LIB -DQT_QUICK_LIB -I/home/alexander/projects/VirtMonitors/build/src/virtmonitors_autogen/include -I/home/alexander/projects/VirtMonitors/src -isystem /usr/include/qt6/QtQml -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtQmlIntegration -isystem /usr/include/qt6/QtNetwork -isystem /usr/include/qt6/QtQuick -isystem /usr/include/qt6/QtGui -isystem /usr/include/qt6/QtOpenGL -g -std=gnu++17 -o src/CMakeFiles/virtmonitors.dir/main.cpp.o -c /home/alexander/projects/VirtMonitors/src/main.cpp",
+  "file": "/home/alexander/projects/VirtMonitors/src/main.cpp",
+  "output": "/home/alexander/projects/VirtMonitors/build/src/CMakeFiles/virtmonitors.dir/main.cpp.o"
+},
+{
+  "directory": "/home/alexander/projects/VirtMonitors/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_OPENGL_LIB -DQT_QMLINTEGRATION_LIB -DQT_QML_LIB -DQT_QUICK_LIB -I/home/alexander/projects/VirtMonitors/build/src/virtmonitors_autogen/include -I/home/alexander/projects/VirtMonitors/src -isystem /usr/include/qt6/QtQml -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtQmlIntegration -isystem /usr/include/qt6/QtNetwork -isystem /usr/include/qt6/QtQuick -isystem /usr/include/qt6/QtGui -isystem /usr/include/qt6/QtOpenGL -g -std=gnu++17 -o src/CMakeFiles/virtmonitors.dir/monitormanager.cpp.o -c /home/alexander/projects/VirtMonitors/src/monitormanager.cpp",
+  "file": "/home/alexander/projects/VirtMonitors/src/monitormanager.cpp",
+  "output": "/home/alexander/projects/VirtMonitors/build/src/CMakeFiles/virtmonitors.dir/monitormanager.cpp.o"
+},
+{
+  "directory": "/home/alexander/projects/VirtMonitors/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_OPENGL_LIB -DQT_QMLINTEGRATION_LIB -DQT_QML_LIB -DQT_QUICK_LIB -I/home/alexander/projects/VirtMonitors/build/src/virtmonitors_autogen/include -I/home/alexander/projects/VirtMonitors/src -isystem /usr/include/qt6/QtQml -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtQmlIntegration -isystem /usr/include/qt6/QtNetwork -isystem /usr/include/qt6/QtQuick -isystem /usr/include/qt6/QtGui -isystem /usr/include/qt6/QtOpenGL -g -std=gnu++17 -o src/CMakeFiles/virtmonitors.dir/virtmonitors_qmltyperegistrations.cpp.o -c /home/alexander/projects/VirtMonitors/build/src/virtmonitors_qmltyperegistrations.cpp",
+  "file": "/home/alexander/projects/VirtMonitors/build/src/virtmonitors_qmltyperegistrations.cpp",
+  "output": "/home/alexander/projects/VirtMonitors/build/src/CMakeFiles/virtmonitors.dir/virtmonitors_qmltyperegistrations.cpp.o"
+},
+{
+  "directory": "/home/alexander/projects/VirtMonitors/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_OPENGL_LIB -DQT_QMLINTEGRATION_LIB -DQT_QML_LIB -DQT_QUICK_LIB -I/home/alexander/projects/VirtMonitors/build/src/virtmonitors_autogen/include -I/home/alexander/projects/VirtMonitors/src -isystem /usr/include/qt6/QtQml -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtQmlIntegration -isystem /usr/include/qt6/QtNetwork -isystem /usr/include/qt6/QtQuick -isystem /usr/include/qt6/QtGui -isystem /usr/include/qt6/QtOpenGL -g -std=gnu++17 -o src/CMakeFiles/virtmonitors.dir/.qt/rcc/qrc_qmake_VirtMonitors.cpp.o -c /home/alexander/projects/VirtMonitors/build/src/.qt/rcc/qrc_qmake_VirtMonitors.cpp",
+  "file": "/home/alexander/projects/VirtMonitors/build/src/.qt/rcc/qrc_qmake_VirtMonitors.cpp",
+  "output": "/home/alexander/projects/VirtMonitors/build/src/CMakeFiles/virtmonitors.dir/.qt/rcc/qrc_qmake_VirtMonitors.cpp.o"
+},
+{
+  "directory": "/home/alexander/projects/VirtMonitors/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_OPENGL_LIB -DQT_QMLINTEGRATION_LIB -DQT_QML_LIB -DQT_QUICK_LIB -I/home/alexander/projects/VirtMonitors/build/src/virtmonitors_autogen/include -I/home/alexander/projects/VirtMonitors/src -isystem /usr/include/qt6/QtQml -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtQmlIntegration -isystem /usr/include/qt6/QtNetwork -isystem /usr/include/qt6/QtQuick -isystem /usr/include/qt6/QtGui -isystem /usr/include/qt6/QtOpenGL -g -std=gnu++17 -o src/CMakeFiles/virtmonitors.dir/.rcc/qmlcache/virtmonitors_qmlcache_loader.cpp.o -c /home/alexander/projects/VirtMonitors/build/src/.rcc/qmlcache/virtmonitors_qmlcache_loader.cpp",
+  "file": "/home/alexander/projects/VirtMonitors/build/src/.rcc/qmlcache/virtmonitors_qmlcache_loader.cpp",
+  "output": "/home/alexander/projects/VirtMonitors/build/src/CMakeFiles/virtmonitors.dir/.rcc/qmlcache/virtmonitors_qmlcache_loader.cpp.o"
+},
+{
+  "directory": "/home/alexander/projects/VirtMonitors/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_OPENGL_LIB -DQT_QMLINTEGRATION_LIB -DQT_QML_LIB -DQT_QUICK_LIB -I/home/alexander/projects/VirtMonitors/build/src/virtmonitors_autogen/include -I/home/alexander/projects/VirtMonitors/src -isystem /usr/include/qt6/QtQml -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtQmlIntegration -isystem /usr/include/qt6/QtNetwork -isystem /usr/include/qt6/QtQuick -isystem /usr/include/qt6/QtGui -isystem /usr/include/qt6/QtOpenGL -g -std=gnu++17 -o src/CMakeFiles/virtmonitors.dir/.rcc/qmlcache/virtmonitors_qml_Main_qml.cpp.o -c /home/alexander/projects/VirtMonitors/build/src/.rcc/qmlcache/virtmonitors_qml_Main_qml.cpp",
+  "file": "/home/alexander/projects/VirtMonitors/build/src/.rcc/qmlcache/virtmonitors_qml_Main_qml.cpp",
+  "output": "/home/alexander/projects/VirtMonitors/build/src/CMakeFiles/virtmonitors.dir/.rcc/qmlcache/virtmonitors_qml_Main_qml.cpp.o"
+},
+{
+  "directory": "/home/alexander/projects/VirtMonitors/build",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_OPENGL_LIB -DQT_QMLINTEGRATION_LIB -DQT_QML_LIB -DQT_QUICK_LIB -I/home/alexander/projects/VirtMonitors/build/src/virtmonitors_autogen/include -I/home/alexander/projects/VirtMonitors/src -isystem /usr/include/qt6/QtQml -isystem /usr/include/qt6 -isystem /usr/include/qt6/QtCore -isystem /usr/lib64/qt6/mkspecs/linux-g++ -isystem /usr/include/qt6/QtQmlIntegration -isystem /usr/include/qt6/QtNetwork -isystem /usr/include/qt6/QtQuick -isystem /usr/include/qt6/QtGui -isystem /usr/include/qt6/QtOpenGL -g -std=gnu++17 -o src/CMakeFiles/virtmonitors.dir/.qt/rcc/qrc_virtmonitors_raw_qml_0.cpp.o -c /home/alexander/projects/VirtMonitors/build/src/.qt/rcc/qrc_virtmonitors_raw_qml_0.cpp",
+  "file": "/home/alexander/projects/VirtMonitors/build/src/.qt/rcc/qrc_virtmonitors_raw_qml_0.cpp",
+  "output": "/home/alexander/projects/VirtMonitors/build/src/CMakeFiles/virtmonitors.dir/.qt/rcc/qrc_virtmonitors_raw_qml_0.cpp.o"
+}
+]

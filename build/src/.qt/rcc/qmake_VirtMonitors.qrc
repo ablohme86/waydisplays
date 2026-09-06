@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/VirtMonitors">
+    <file alias="qmldir">/home/alexander/projects/VirtMonitors/build/src/VirtMonitors/qmldir</file>
+  </qresource>
+</RCC>
+

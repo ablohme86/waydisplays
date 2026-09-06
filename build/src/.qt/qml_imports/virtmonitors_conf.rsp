@@ -1,0 +1,14 @@
+-rootPath
+/home/alexander/projects/VirtMonitors/src
+-cmake-output
+-output-file
+/home/alexander/projects/VirtMonitors/build/src/.qt/qml_imports/virtmonitors_conf.cmake
+-importPath
+/home/alexander/projects/VirtMonitors/build/src
+-importPath
+/home/alexander/projects/VirtMonitors/build/src/VirtMonitors
+-importPath
+/usr/lib64/qt6/qml
+-qrcFiles
+/home/alexander/projects/VirtMonitors/build/src/.qt/rcc/qmake_VirtMonitors.qrc
+/home/alexander/projects/VirtMonitors/build/src/.qt/rcc/virtmonitors_raw_qml_0.qrc

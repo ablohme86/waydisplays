@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_virtmonitors_FILE /home/alexander/projects/VirtMonitors/build/src/virtmonitors)
+set(__QT_DEPLOY_TARGET_virtmonitors_TYPE EXECUTABLE)

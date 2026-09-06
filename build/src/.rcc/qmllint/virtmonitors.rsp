@@ -1,0 +1,14 @@
+--bare
+-I
+/home/alexander/projects/VirtMonitors/build/src
+-I
+/home/alexander/projects/VirtMonitors/build/src/VirtMonitors
+-I
+/home/alexander/projects/VirtMonitors/build/src
+-I
+/usr/lib64/qt6/qml
+--resource
+/home/alexander/projects/VirtMonitors/build/src/.qt/rcc/qmake_VirtMonitors.qrc
+--resource
+/home/alexander/projects/VirtMonitors/build/src/.qt/rcc/virtmonitors_raw_qml_0.qrc
+/home/alexander/projects/VirtMonitors/src/qml/Main.qml

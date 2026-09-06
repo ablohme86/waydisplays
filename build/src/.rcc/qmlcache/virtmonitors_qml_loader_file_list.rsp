@@ -1,0 +1,5 @@
+--resource
+/home/alexander/projects/VirtMonitors/build/src/.qt/rcc/qmake_VirtMonitors.qrc
+--resource
+/home/alexander/projects/VirtMonitors/build/src/.qt/rcc/virtmonitors_raw_qml_0.qrc
+/VirtMonitors/qml/Main.qml

@@ -1,0 +1,31 @@
+VirtMonitors
+------------
+
+En Qt 6/C++-app for å opprette og administrere virtuelle skjermer på KDE
+Wayland med `krfb-virtualmonitor`. Profiler kjøres som systemd-brukertjenester,
+og kan valgfritt kobles til Sunshine ved å oppdatere `output_name`.
+
+Krav: Qt 6.5+, CMake 3.16+, KRFB og systemd.
+
+På Fedora kan byggeavhengighetene installeres med:
+
+    sudo dnf install cmake gcc-c++ qt6-qtbase-devel qt6-qtdeclarative-devel
+
+Eksisterende `*virtual*monitor*.service`-oppsett importeres første gang appen
+åpnes. Før appen endrer en importert tjeneste lagres en
+`.virtmonitors.bak`-kopi. Slettede tjenester beholdes med endelsen
+`.virtmonitors.deleted-<tidspunkt>` slik at de kan gjenopprettes.
+
+-- Build instructions --
+
+cd /home/alexander/projects/VirtMonitors
+cmake -S . -B build
+cmake --build build
+
+./build/src/virtmonitors
+
+
+-- Tutorials and resources --
+
+Qt online docs
+https://doc.qt.io/
