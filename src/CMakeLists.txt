@@ -14,6 +14,7 @@ qt_add_resources(virtmonitors sunshine_helper
 qt_add_qml_module(virtmonitors
     URI VirtMonitors
     VERSION 1.0
+    RESOURCE_PREFIX "/qt/qml"
     QML_FILES
         qml/Main.qml
 )

@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/VirtMonitors/">
-    <file alias="qml/Main.qml">/home/alexander/projects/VirtMonitors/src/qml/Main.qml</file>
-  </qresource>
-</RCC>
-

@@ -1,2 +1,4 @@
-/build-local/
+/build/
+/build-*/
+virtmonitors
 __pycache__/

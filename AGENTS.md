@@ -155,12 +155,12 @@ QML validation command:
   roles. These do not prevent QML compilation or startup. If cleaning these up,
   verify Qt 6.5 compatibility and do not break delegate role resolution.
 
-CMake currently emits developer warnings for Qt policies QTP0001 and QTP0004.
-They are non-fatal. They may be addressed explicitly in a future cleanup.
+CMake developer warnings for Qt policies QTP0001 and QTP0004 have been
+resolved (QTP0001 NEW and QTP0004 NEW, setting RESOURCE_PREFIX "/qt/qml").
 
 ## Last verified state
 
-- CMake configuration: successful
+- Makefile & CMake configuration: successful (`make`, `make install`, `make test`)
 - QML cache generation: successful
 - C++ compilation: successful
 - Linking: successful
@@ -174,5 +174,5 @@ They are non-fatal. They may be addressed explicitly in a future cleanup.
 - `src/sunshineintegration.cpp`: configuration, backups, watcher deployment and restart.
 - `src/helpers/sunshine-display.py`: embedded Python helper, selected profile read from JSON.
 - `tests/`: isolated config integration and display/watcher regression tests via CTest.
-- Build in `build-local` or a temporary directory: tracked `build/` has stale absolute paths.
+- Top-level `Makefile` wraps CMake for `make`, `make install`, `make test`, and creates `./virtmonitors` symlink.
 - Local application launcher uses `~/.local/bin/virtmonitors`.

@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/home/alexander/projects/VirtMonitors/build/cmake_install.cmake",
-		"/home/alexander/projects/VirtMonitors/build/src/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

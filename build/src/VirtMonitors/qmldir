@@ -1,6 +1,0 @@
-module VirtMonitors
-typeinfo virtmonitors.qmltypes
-prefer :/VirtMonitors/
-Main 1.0 qml/Main.qml
-depends QtQuick
-

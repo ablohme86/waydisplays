@@ -38,19 +38,35 @@ app-dev.lizardbyte.app.Sunshine.service eller sunshine.service.
 Appen starter ikke om Sunshine før du trykker knappen. En skrivefeil eller
 manglende tjeneste vises i statusfeltet; profilen kan fremdeles være lagret.
 
-Bygg og test
-------------
+Bygg og installasjon
+--------------------
 
-På Fedora: sudo dnf install cmake gcc-c++ qt6-qtbase-devel qt6-qtdeclarative-devel
+Bygg og kjør tester:
 
-    cmake -S . -B build-local
-    cmake --build build-local -j4
-    ctest --test-dir build-local --output-on-failure
-    ./build-local/src/virtmonitors
+    make
+    make test
 
-build/ i det opprinnelige prosjektet inneholder genererte filer med gamle
-absolutte stier. Bruk en ny byggemappe. Testene bruker midlertidige mapper og
-en simulert systemctl; de endrer ikke dine skjermer eller Sunshine-tjenester.
+Start direkte fra prosjektmappen:
+
+    ./virtmonitors
+
+Installer (installerer som standard til ~/.local/bin for vanlig bruker, eller /usr/local/bin ved sudo):
+
+    make install
+
+For å angi egen prefix (f.eks. /usr eller /usr/local):
+
+    make install PREFIX=/usr/local
+
+Avinstaller:
+
+    make uninstall
+
+Du kan også bruke CMake direkte:
+
+    cmake -S . -B build
+    cmake --build build -j$(nproc)
+    ctest --test-dir build --output-on-failure
 
 Sikkerhetskopier og gjenoppretting
 --------------------------------
