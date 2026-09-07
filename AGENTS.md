@@ -66,7 +66,10 @@ Implemented behavior:
 - Stop and restart an active profile when it is edited.
 - Poll KScreen for up to 10 seconds after startup, then enable the new output.
 - Report active service state in the UI.
-- Optionally update Sunshine's `output_name` when a profile starts.
+- When enabled, configure Sunshine KWin capture, the selected output, prep hooks,
+  and the bundled session watcher when a profile is saved or started.
+- Offer an explicit Sunshine restart button; never interrupt a stream to apply settings.
+- Preserve unrelated Sunshine settings/hooks and back up replaced files once.
 - Stop the service before removing a profile.
 - Rename removed service files to
   `.virtmonitors.deleted-<unix-timestamp>` instead of irreversibly deleting
@@ -86,9 +89,14 @@ the character set requires correct systemd argument escaping.
   assistant responses.
 - Use `QSaveFile` for profile, service, and Sunshine configuration updates.
 - Keep generated profile/service permissions private (`0600` equivalent).
-- Do not disable physical displays automatically. The pre-existing helper does
-  that for streaming, but this application currently limits itself to managing
-  the virtual output to avoid leaving the session without a usable display.
+- Physical displays may be disabled by the bundled helper during Sunshine
+  streaming, as explicitly requested by the user. Saving or previewing a profile
+  must not disable them. Restore the prior layout on disconnect and retain the
+  virtual output if no other screen is available.
+- Keep the binary-journal-message regression test: journalctl JSON MESSAGE may
+  be an integer byte array rather than a string.
+- Respect XDG_CONFIG_HOME for integration/service paths; use temporary HOME
+  and XDG paths and fake systemctl when testing configuration changes.
 - When smoke-testing startup, isolate application configuration with a temporary
   `XDG_CONFIG_HOME` so the user's profile store is not changed.
 
@@ -160,3 +168,11 @@ They are non-fatal. They may be addressed explicitly in a future cleanup.
 - Isolated offscreen application startup: successful
 - User's real Sunshine/systemd files were not changed during implementation or
   verification
+
+## Sunshine integration (September 2026)
+
+- `src/sunshineintegration.cpp`: configuration, backups, watcher deployment and restart.
+- `src/helpers/sunshine-display.py`: embedded Python helper, selected profile read from JSON.
+- `tests/`: isolated config integration and display/watcher regression tests via CTest.
+- Build in `build-local` or a temporary directory: tracked `build/` has stale absolute paths.
+- Local application launcher uses `~/.local/bin/virtmonitors`.

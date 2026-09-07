@@ -9,5 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 6.5 REQUIRED COMPONENTS Quick)
 
 qt_standard_project_setup()
+include(CTest)
 
 add_subdirectory(src)

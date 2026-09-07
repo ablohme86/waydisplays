@@ -1,4 +1,5 @@
 #include "monitormanager.h"
+#include "sunshineintegration.h"
 
 #include <QDateTime>
 #include <QDir>
@@ -22,10 +23,7 @@ QString profilesPath() {
   return configDir() + QStringLiteral("/profiles.json");
 }
 QString userSystemdDir() {
-  return QDir::homePath() + QStringLiteral("/.config/systemd/user");
-}
-QString sunshineConfig() {
-  return QDir::homePath() + QStringLiteral("/.config/sunshine/sunshine.conf");
+  return SunshineIntegration::configRoot() + QStringLiteral("/systemd/user");
 }
 } // namespace
 
@@ -120,6 +118,12 @@ QString MonitorManager::generatePassword() const {
 }
 
 void MonitorManager::saveProfile(const QVariantMap &v) {
+  if (m_busy) return;
+  if (QFile::exists(SunshineIntegration::statePath())) {
+    setStatus(QStringLiteral("Koble fra Moonlight før du endrer skjermprofiler"));
+    emit operationFinished(false);
+    return;
+  }
   const QString name = v.value("name").toString().trimmed();
   const int width = v.value("width").toInt(),
             height = v.value("height").toInt();
@@ -169,10 +173,23 @@ void MonitorManager::saveProfile(const QVariantMap &v) {
   p.port = port;
   p.scale = scale;
   p.sunshine = v.value("sunshine", true).toBool();
+  for (int i = 0; i < m_profiles.size(); ++i) {
+    if (i != row && (m_profiles[i].name == p.name || m_profiles[i].port == p.port)) {
+      setStatus(QStringLiteral("Velg et unikt skjermnavn og en ledig VNC-port"));
+      emit operationFinished(false);
+      return;
+    }
+  }
   if (!v.value("password").toString().isEmpty())
     p.password = v.value("password").toString();
   const bool wasActive = row >= 0 && m_profiles[row].active;
+  const bool wasSunshineSelected = SunshineIntegration::selected(p.serviceName);
   QString error;
+  if (!p.sunshine && !SunshineIntegration::disconnect(p.serviceName, &error)) {
+    setStatus(error);
+    emit operationFinished(false);
+    return;
+  }
   if (wasActive)
     run(QStringLiteral("systemctl"),
         {QStringLiteral("--user"), QStringLiteral("stop"),
@@ -198,6 +215,13 @@ void MonitorManager::saveProfile(const QVariantMap &v) {
   persist();
   run(QStringLiteral("systemctl"),
       {QStringLiteral("--user"), QStringLiteral("daemon-reload")});
+  if (p.sunshine && !updateSunshine(p)) {
+    if (wasActive)
+      run(QStringLiteral("systemctl"), {QStringLiteral("--user"), QStringLiteral("start"), p.serviceName});
+    emit operationFinished(false);
+    this->refresh();
+    return;
+  }
   if (wasActive) {
     run(QStringLiteral("systemctl"),
         {QStringLiteral("--user"), QStringLiteral("start"), p.serviceName});
@@ -206,6 +230,10 @@ void MonitorManager::saveProfile(const QVariantMap &v) {
   }
   setStatus(row >= 0 ? QStringLiteral("Profilen ble lagret")
                      : QStringLiteral("Skjermprofilen ble opprettet"));
+  if (p.sunshine)
+    setStatus(QStringLiteral("Profilen og Sunshine er konfigurert. Start Sunshine på nytt før tilkobling"));
+  else if (wasSunshineSelected)
+    setStatus(QStringLiteral("Sunshine-koblingen er fjernet. Start Sunshine på nytt før tilkobling"));
   emit operationFinished(true);
   if (!wasActive)
     this->refresh();
@@ -237,6 +265,7 @@ bool MonitorManager::writeService(const Profile &p, QString *error) {
           .arg(p.password)
           .arg(p.port)
           .arg(p.scale);
+  file.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
   file.write(unit.toUtf8());
   if (!file.commit()) {
     *error = QStringLiteral("Kunne ikke lagre tjenesten");
@@ -247,9 +276,19 @@ bool MonitorManager::writeService(const Profile &p, QString *error) {
 }
 
 void MonitorManager::removeProfile(int row) {
-  if (row < 0 || row >= m_profiles.size())
+  if (row < 0 || row >= m_profiles.size() || m_busy)
     return;
   const auto p = m_profiles.at(row);
+  if (QFile::exists(SunshineIntegration::statePath())) {
+    setStatus(QStringLiteral("Koble fra Moonlight før du sletter skjermen"));
+    return;
+  }
+  const bool wasSelected = SunshineIntegration::selected(p.serviceName);
+  QString error;
+  if (!SunshineIntegration::disconnect(p.serviceName, &error)) {
+    setStatus(error);
+    return;
+  }
   run(QStringLiteral("systemctl"),
       {QStringLiteral("--user"), QStringLiteral("stop"), p.serviceName});
   const QString servicePath =
@@ -264,11 +303,17 @@ void MonitorManager::removeProfile(int row) {
   run(QStringLiteral("systemctl"),
       {QStringLiteral("--user"), QStringLiteral("daemon-reload")});
   setStatus(QStringLiteral("Skjermprofilen ble slettet"));
+  if (wasSelected)
+    setStatus(QStringLiteral("Profilen er slettet. Start Sunshine på nytt for å fullføre frakoblingen"));
 }
 
 void MonitorManager::startProfile(int row) {
   if (row < 0 || row >= m_profiles.size() || m_busy)
     return;
+  if (QFile::exists(SunshineIntegration::statePath())) {
+    setStatus(QStringLiteral("Koble fra Moonlight før du endrer aktive skjermer"));
+    return;
+  }
   if (!backendAvailable()) {
     setStatus(
         QStringLiteral("Installer krfb for å opprette virtuelle KDE-skjermer"));
@@ -288,15 +333,27 @@ void MonitorManager::startProfile(int row) {
 }
 
 void MonitorManager::configureWhenReady(const Profile &p, int attemptsLeft) {
+  if (QFile::exists(SunshineIntegration::statePath())) {
+    setBusy(false);
+    setStatus(QStringLiteral("Moonlight er tilkoblet; skjermoppsettet beholdes"));
+    refresh();
+    return;
+  }
   QString outputs;
   run(QStringLiteral("kscreen-doctor"), {QStringLiteral("-o")}, &outputs);
   if (outputs.contains(p.output())) {
-    run(QStringLiteral("kscreen-doctor"),
-        {QStringLiteral("output.%1.enable").arg(p.output())});
-    if (p.sunshine)
-      updateSunshine(p);
+    if (!run(QStringLiteral("kscreen-doctor"),
+        {QStringLiteral("output.%1.enable").arg(p.output())})) {
+      setBusy(false);
+      setStatus(QStringLiteral("Kunne ikke aktivere den virtuelle skjermen"));
+      refresh();
+      return;
+    }
+    const bool configured = !p.sunshine || updateSunshine(p);
     setBusy(false);
-    setStatus(QStringLiteral("%1 er aktiv").arg(p.name));
+    if (configured)
+      setStatus(p.sunshine ? QStringLiteral("%1 er aktiv. Start Sunshine på nytt før tilkobling").arg(p.name)
+                           : QStringLiteral("%1 er aktiv").arg(p.name));
     refresh();
     return;
   }
@@ -313,8 +370,12 @@ void MonitorManager::configureWhenReady(const Profile &p, int attemptsLeft) {
 }
 
 void MonitorManager::stopProfile(int row) {
-  if (row < 0 || row >= m_profiles.size())
+  if (row < 0 || row >= m_profiles.size() || m_busy)
     return;
+  if (QFile::exists(SunshineIntegration::statePath())) {
+    setStatus(QStringLiteral("Koble fra Moonlight før du stopper skjermen"));
+    return;
+  }
   QString out;
   const auto p = m_profiles.at(row);
   if (run(QStringLiteral("systemctl"),
@@ -359,23 +420,22 @@ bool MonitorManager::run(const QString &program, const QStringList &arguments,
          process.exitCode() == 0;
 }
 
-void MonitorManager::updateSunshine(const Profile &p) {
-  QFile input(sunshineConfig());
-  if (!input.open(QIODevice::ReadOnly | QIODevice::Text))
-    return;
-  QString text = QString::fromUtf8(input.readAll());
-  input.close();
-  QRegularExpression re(QStringLiteral("(?m)^\\s*output_name\\s*=.*$"));
-  const QString line = QStringLiteral("output_name = ") + p.output();
-  if (re.match(text).hasMatch())
-    text.replace(re, line);
-  else
-    text += QStringLiteral("\n") + line + QStringLiteral("\n");
-  QSaveFile output(sunshineConfig());
-  if (output.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    output.write(text.toUtf8());
-    output.commit();
+bool MonitorManager::updateSunshine(const Profile &p) {
+  QString error;
+  if (!SunshineIntegration::configure(p.output(), p.serviceName, &error)) {
+    setStatus(QStringLiteral("Profilen er lagret, men Sunshine-oppsettet feilet: ") + error);
+    return false;
   }
+  return true;
+}
+
+void MonitorManager::restartSunshine() {
+  if (m_busy) return;
+  setBusy(true);
+  QString error;
+  const bool success = SunshineIntegration::restart(&error);
+  setBusy(false);
+  setStatus(success ? QStringLiteral("Sunshine er startet på nytt og klar for Moonlight") : error);
 }
 
 void MonitorManager::load() {
@@ -429,7 +489,7 @@ void MonitorManager::persist() {
 void MonitorManager::importExisting() {
   QDir dir(userSystemdDir());
   const auto files =
-      dir.entryList({QStringLiteral("*virtual*monitor*.service")}, QDir::Files);
+      dir.entryList({QStringLiteral("*virtual*monitor*.service"), QStringLiteral("virtmonitors-*.service")}, QDir::Files);
   QRegularExpression args(
       QStringLiteral("--name\\s+(\\S+)\\s+--resolution\\s+(\\d+)x(\\d+)\\s+--"
                      "password\\s+(\\S+)\\s+--port\\s+(\\d+)"));

@@ -44,6 +44,7 @@ public:
   Q_INVOKABLE void startProfile(int row);
   Q_INVOKABLE void stopProfile(int row);
   Q_INVOKABLE void refresh();
+  Q_INVOKABLE void restartSunshine();
   Q_INVOKABLE QString generatePassword() const;
 
 signals:
@@ -68,7 +69,7 @@ private:
            QString *output = nullptr) const;
   void setStatus(const QString &message);
   void setBusy(bool value);
-  void updateSunshine(const Profile &profile);
+  bool updateSunshine(const Profile &profile);
   void configureWhenReady(const Profile &profile, int attemptsLeft);
   static QString safeId(const QString &name);
 

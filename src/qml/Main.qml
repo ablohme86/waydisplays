@@ -57,6 +57,7 @@ ApplicationWindow {
                 Label { text: "Opprett, rediger og aktiver virtuelle monitorer for strømming."; color: "#8f9cb2"; font.pixelSize: 14 }
             }
             Item { Layout.fillWidth: true }
+            SoftButton { text: "Start Sunshine på nytt"; enabled: !monitorManager.busy; onClicked: monitorManager.restartSunshine() }
             SoftButton { text: "↻  Oppdater"; onClicked: monitorManager.refresh() }
         }
         Rectangle {
@@ -149,7 +150,7 @@ ApplicationWindow {
                         ColumnLayout {
                             spacing: 2
                             Label { text: "Bruk med Sunshine"; color: "#e7ecf7"; font.weight: Font.DemiBold }
-                            Label { text: "Oppdater output_name når profilen startes"; color: "#7f8da4"; font.pixelSize: 12 }
+                            Label { text: "Slå av fysiske skjermer under strømming"; color: "#7f8da4"; font.pixelSize: 12 }
                         }
                         Item { Layout.fillWidth: true }
                         Switch { id: sunshineCheck }

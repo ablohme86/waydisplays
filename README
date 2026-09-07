@@ -1,31 +1,80 @@
-VirtMonitors
+VirtMonitors (waydisplays)
+-------------------------
+
+Qt 6/C++-app for virtuelle skjermer på KDE Plasma Wayland. Skjermprofilene
+kjøres som systemd-brukertjenester med krfb-virtualmonitor.
+
+Sunshine
+--------
+
+1. Opprett eller rediger en profil med «Bruk med Sunshine» påslått.
+2. Lagre profilen. Appen setter capture=kwin og output_name, og installerer
+   en skjermhjelper og en systemd-overvåker for den valgte profilen.
+3. Trykk «Start Sunshine på nytt» etter endringer i Sunshine-koblingen.
+4. Koble til Desktop i Moonlight. Den virtuelle skjermen startes automatisk,
+   og de andre skjermene deaktiveres først når strømmingen starter.
+5. Ved frakobling gjenopprettes det lagrede skjermoppsettet, også dersom
+   Desktop fortsatt er startet i Sunshine. Ved gjenoppkobling byttes det igjen.
+
+Sunshine bruker én profil om gangen: den sist lagrede/startede profilen med
+«Bruk med Sunshine» velges. «Start» lar deg også forhåndsvise den virtuelle
+skjermen som et vanlig ekstra skrivebord. «Stopp» stopper skjermtjenesten;
+Sunshine kan starte den igjen ved neste tilkobling. Slå av «Bruk med Sunshine»
+eller slett den valgte profilen for å fjerne koblingen, og start Sunshine på nytt.
+Profilendringer og omstart er sperret mens skjermhjelperen har en aktiv økt.
+
+Eksisterende Sunshine-innstillinger og andre global_prep_cmd-kommandoer
+bevares. De tidligere sunshine-display/sunshine-display-mode on/off-krokene
+erstattes med den nye hjelperen. Binære journalmeldinger håndteres uten krasj.
+Ved oppstart som aldri blir en strømmeøkt gjenopprettes skjermene etter 30 sekunder.
+Hvis ingen andre skjermer er tilgjengelige, beholdes den virtuelle skjermen.
+
+Krav
+----
+
+Qt 6.5+, CMake 3.16+, Python 3, KRFB, kscreen-doctor og systemd.
+Sunshine må støtte capture=kwin og være installert som en brukertjeneste:
+app-dev.lizardbyte.app.Sunshine.service eller sunshine.service.
+Appen starter ikke om Sunshine før du trykker knappen. En skrivefeil eller
+manglende tjeneste vises i statusfeltet; profilen kan fremdeles være lagret.
+
+Bygg og test
 ------------
 
-En Qt 6/C++-app for å opprette og administrere virtuelle skjermer på KDE
-Wayland med `krfb-virtualmonitor`. Profiler kjøres som systemd-brukertjenester,
-og kan valgfritt kobles til Sunshine ved å oppdatere `output_name`.
+På Fedora: sudo dnf install cmake gcc-c++ qt6-qtbase-devel qt6-qtdeclarative-devel
 
-Krav: Qt 6.5+, CMake 3.16+, KRFB og systemd.
+    cmake -S . -B build-local
+    cmake --build build-local -j4
+    ctest --test-dir build-local --output-on-failure
+    ./build-local/src/virtmonitors
 
-På Fedora kan byggeavhengighetene installeres med:
+build/ i det opprinnelige prosjektet inneholder genererte filer med gamle
+absolutte stier. Bruk en ny byggemappe. Testene bruker midlertidige mapper og
+en simulert systemctl; de endrer ikke dine skjermer eller Sunshine-tjenester.
 
-    sudo dnf install cmake gcc-c++ qt6-qtbase-devel qt6-qtdeclarative-devel
+Sikkerhetskopier og gjenoppretting
+--------------------------------
 
-Eksisterende `*virtual*monitor*.service`-oppsett importeres første gang appen
-åpnes. Før appen endrer en importert tjeneste lagres en
-`.virtmonitors.bak`-kopi. Slettede tjenester beholdes med endelsen
-`.virtmonitors.deleted-<tidspunkt>` slik at de kan gjenopprettes.
+Konfigurasjon ligger under XDG_CONFIG_HOME (normalt ~/.config):
+- sunshine/sunshine.conf
+- virtmonitors-sunshine.json: valgt skjerm og tjeneste
+- systemd/user/sunshine-display.service og Sunshine-tjenestens drop-in
 
--- Build instructions --
+Hjelperen ligger i ~/.local/lib/virtmonitors/sunshine-display.py.
+Det lagrede skjermoppsettet ligger i XDG_STATE_HOME/sunshine-display/desktop.json
+(normalt ~/.local/state/sunshine-display/desktop.json).
 
-cd /home/alexander/projects/VirtMonitors
-cmake -S . -B build
-cmake --build build
+Endrede Sunshine-/hjelper-/overvåkerfiler får en engangs .virtmonitors.bak-kopi.
+Importerte skjermtjenester sikkerhetskopieres også før endring. Profil- og
+konfigurasjonsfiler er private (0600). Slettede skjermtjenester beholdes som
+.virtmonitors.deleted-<tidspunkt>. Ikke del konfigurasjonskopier offentlig;
+de kan inneholde passord eller andre private kommandoer.
 
-./build/src/virtmonitors
+For manuell gjenoppretting av skjermene etter frakobling:
 
+    python3 ~/.local/lib/virtmonitors/sunshine-display.py off
 
--- Tutorials and resources --
-
-Qt online docs
-https://doc.qt.io/
+For å gå tilbake til tidligere Sunshine-oppsett, stopp skjermovervåkeren,
+gjenopprett de aktuelle .virtmonitors.bak-filene og kjør systemctl --user
+daemon-reload før Sunshine startes på nytt. Ved første installasjon uten en
+eldre overvåker kan appens drop-in og sunshine-display.service fjernes i stedet.
