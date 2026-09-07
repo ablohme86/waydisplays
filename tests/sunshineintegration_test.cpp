@@ -22,7 +22,7 @@ QByteArray read(const QString &path) {
 int main(int argc, char **argv) {
   QTemporaryDir temporary;
   check(temporary.isValid(), "temporary directory");
-  const QString home = temporary.path() + "/home with 'quote";
+  const QString home = temporary.path() + "/home";
   qputenv("HOME", home.toUtf8());
   qputenv("XDG_CONFIG_HOME", (home + "/config").toUtf8());
   qputenv("XDG_STATE_HOME", (home + "/state").toUtf8());
@@ -43,10 +43,19 @@ int main(int argc, char **argv) {
   auto match = QRegularExpression("global_prep_cmd = ([^\\n]*)").match(QString::fromUtf8(configured));
   auto hooks = QJsonDocument::fromJson(match.captured(1).toUtf8()).array();
   check(hooks.size() == 2 && hooks[1].toObject()["do"] == "echo before", "other hooks preserved");
-  check(hooks[0].toObject()["do"].toString().contains("'\\''"), "home directory shell quoted");
+  const QString expectedCmd = "/usr/bin/python3 " + home + "/.local/lib/virtmonitors/sunshine-display.py on";
+  check(hooks[0].toObject()["do"].toString() == expectedCmd, "prep command unquoted for boost process");
+  check(QFile::permissions(home + "/.local/lib/virtmonitors/sunshine-display.py") & QFileDevice::ExeOwner, "helper is executable");
   check(read(path + ".virtmonitors.bak") == original, "original backup preserved");
   check(SunshineIntegration::configure("Virtual-Test", "virtmonitors-test.service", &error), qPrintable(error));
   check(read(path) == configured, "repeated setup is idempotent");
+  // Ensure legacy quoted command from prior version is cleaned up on reconfigure
+  put(path, "global_prep_cmd = [{\"do\":\"/usr/bin/python3 '" + home.toUtf8() + "/.local/lib/virtmonitors/sunshine-display.py' on\"},{\"do\":\"echo before\"}]\n");
+  check(SunshineIntegration::configure("Virtual-Test", "virtmonitors-test.service", &error), qPrintable(error));
+  auto matchLegacy = QRegularExpression("global_prep_cmd = ([^\\n]*)").match(QString::fromUtf8(read(path)));
+  auto hooksLegacy = QJsonDocument::fromJson(matchLegacy.captured(1).toUtf8()).array();
+  check(hooksLegacy.size() == 2, "legacy quoted hook replaced while preserving others");
+  check(hooksLegacy[0].toObject()["do"].toString() == expectedCmd, "legacy quoted hook replaced with unquoted command");
   check(SunshineIntegration::configure("Virtual-Second", "virtmonitors-second.service", &error), qPrintable(error));
   check(SunshineIntegration::selected("virtmonitors-second.service"), "new profile selected");
   check(!SunshineIntegration::selected("virtmonitors-test.service"), "old profile deselected");

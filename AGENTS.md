@@ -176,3 +176,4 @@ resolved (QTP0001 NEW and QTP0004 NEW, setting RESOURCE_PREFIX "/qt/qml").
 - `tests/`: isolated config integration and display/watcher regression tests via CTest.
 - Top-level `Makefile` wraps CMake for `make`, `make install`, `make test`, and creates `./virtmonitors` symlink.
 - Local application launcher uses `~/.local/bin/virtmonitors`.
+- Unquoted helper invocation in Sunshine prep hooks for compatibility with Boost.Process direct command execution.

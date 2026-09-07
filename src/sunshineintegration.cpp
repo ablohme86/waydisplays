@@ -71,6 +71,7 @@ bool managedCommand(const QJsonObject &entry) {
   for (const auto &path : {helperPath(), QDir::homePath() + "/.local/bin/sunshine-display",
                            QDir::homePath() + "/.local/bin/sunshine-display-mode"}) {
     if (cmd == path + " on" || cmd == shellQuote(path) + " on" ||
+        cmd == "/usr/bin/python3 " + path + " on" ||
         cmd == "/usr/bin/python3 " + shellQuote(path) + " on") return true;
   }
   return false;
@@ -103,6 +104,9 @@ bool write(const QString &path, const QByteArray &data, QString *error) {
   if (file.write(data) != data.size() || !file.commit()) {
     *error = "Kunne ikke lagre " + path;
     return false;
+  }
+  if (path == helperPath()) {
+    QFile::setPermissions(path, QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner);
   }
   return true;
 }
@@ -153,7 +157,7 @@ bool configure(const QString &output, const QString &monitorService, QString *er
       if (!managedCommand(value.toObject())) hooks.append(value);
     }
   }
-  const QString invocation = "/usr/bin/python3 " + shellQuote(helperPath());
+  const QString invocation = "/usr/bin/python3 " + helperPath();
   // Switch before other prep commands, restore after them (Sunshine undoes in reverse).
   hooks.prepend(QJsonObject{{"do", invocation + " on"}, {"undo", invocation + " off"}});
   text = setOption(text, "capture", "kwin");
@@ -165,7 +169,7 @@ bool configure(const QString &output, const QString &monitorService, QString *er
     return false;
   }
   const QString systemd = configRoot() + "/systemd/user/";
-  // Use %h in systemd commands and shell-quote the absolute helper in prep hooks.
+  // Use %h in systemd commands and unquoted helper invocation in Sunshine prep hooks.
   const QByteArray watcher = QString(
       "[Unit]\nDescription=Sunshine display switching\nAfter=%1\nPartOf=%1 graphical-session.target\nConditionPathExists=%2\n\n"
       "[Service]\nExecStart=/usr/bin/python3 \"%h/.local/lib/virtmonitors/sunshine-display.py\" watch\n"
